@@ -128,11 +128,11 @@ class table_save
 }
 
 //RUN...POST DATA
-if (isset($_POST["csrf_token"])  && $_POST["csrf_token"] === $_SESSION['csrf_token']) {
+if (isset($_POST["csrf_token"])  && d_xss($_POST["csrf_token"]) === $_SESSION['csrf_token']) {
 
-    $_SESSION["offset"] = (int)strip_tags($_POST["reset_flag"]) === 1 ? null : $_SESSION["offset"];
-    $filename = strip_tags($_POST["filename"]);
-    $cnt = (int)strip_tags($_POST["cnt"]);
+    $_SESSION["offset"] = (int)d_xss($_POST["reset_flag"]) === 1 ? null : d_xss($_SESSION["offset"]);
+    $filename = d_xss($_POST["filename"]);
+    $cnt = (int)d_xss($_POST["cnt"]);
 
     $column_name = "test1,test2,test3,test4,test5,test6,test7,test8,test9,test10,test11,test12,test13,test14,test15";
     $header_skip = 1;
@@ -142,4 +142,9 @@ if (isset($_POST["csrf_token"])  && $_POST["csrf_token"] === $_SESSION['csrf_tok
     $csv = null;
 } else {
     print "";
+}
+function d_xss($data){
+    $data = strip_tags($data);
+    $data = htmlspecialchars($data,ENT_QUOTES);
+    return $data;
 }
